@@ -77,7 +77,7 @@ def main():
 
     save("data/crypto-history.json", {
         "fetched_at": int(time.time() * 1000),
-        "assets": assets,
+        "indices": assets,
     })
     print("=== Done ===")
 
