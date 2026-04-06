@@ -22,13 +22,14 @@ HEADERS = {
 YAHOO_BASE = "https://query1.finance.yahoo.com/v8/finance/chart/"
 
 SYMBOLS = {
-    "Bitcoin":  "BTC-USD",
-    "Ethereum": "ETH-USD",
-    "Solana":   "SOL-USD",
-    "XRP":      "XRP-USD",
-    "BNB":      "BNB-USD",
-    "Dogecoin": "DOGE-USD",
-    "Cardano":  "ADA-USD",
+    "Bitcoin":   "BTC-USD",
+    "Ethereum":  "ETH-USD",
+    "Solana":    "SOL-USD",
+    "XRP":       "XRP-USD",
+    "BNB":       "BNB-USD",
+    "Dogecoin":  "DOGE-USD",
+    "Cardano":   "ADA-USD",
+    "Avalanche": "AVAX-USD",
 }
 
 
