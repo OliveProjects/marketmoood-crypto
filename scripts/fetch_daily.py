@@ -76,6 +76,10 @@ def main():
             print(f"    ERROR {name}: {e}")
         time.sleep(0.4)
 
+    if len(assets) < 6:
+        print(f"  Only {len(assets)} assets fetched (expected 8) — skipping save to preserve existing data.")
+        return
+
     save("data/crypto-history.json", {
         "fetched_at": int(time.time() * 1000),
         "indices": assets,
