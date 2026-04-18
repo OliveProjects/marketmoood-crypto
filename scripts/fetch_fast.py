@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """
 Runs every 5 minutes.
-Fetches crypto intraday (5m/1d, last 24h) and weekly (60m/5d).
+Fetches crypto intraday (5m/2d → trimmed to last 24h) and weekly (60m/5d).
 Uses 5-minute candles instead of 60-minute — eliminates the 60-min staleness lag.
+Fetches 2 days so the cutoff_ms filter produces a true rolling 24h window, not a
+calendar-day window (crypto trades 24/7, so "1d" would start at UTC midnight).
 """
 
 import json
@@ -74,7 +76,7 @@ def main():
 
     for name, symbol in SYMBOLS.items():
         print(f"  {name}")
-        pts_i = fetch_yahoo_chart(symbol, "5m", "1d")
+        pts_i = fetch_yahoo_chart(symbol, "5m", "2d")
         if pts_i:
             intraday[name] = [p for p in pts_i if p["x"] >= cutoff_ms]
         pts_w = fetch_yahoo_chart(symbol, "60m", "5d")
