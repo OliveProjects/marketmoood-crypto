@@ -20,14 +20,36 @@ HEADERS = {
 YAHOO_BASE = "https://query1.finance.yahoo.com/v8/finance/chart/"
 
 SYMBOLS = {
-    "Bitcoin":   "BTC-USD",
-    "Ethereum":  "ETH-USD",
-    "Solana":    "SOL-USD",
-    "XRP":       "XRP-USD",
-    "BNB":       "BNB-USD",
-    "Dogecoin":  "DOGE-USD",
-    "Cardano":   "ADA-USD",
-    "Avalanche": "AVAX-USD",
+    "Bitcoin":           "BTC-USD",
+    "Ethereum":          "ETH-USD",
+    "XRP":               "XRP-USD",
+    "BNB":               "BNB-USD",
+    "Solana":            "SOL-USD",
+    "Dogecoin":          "DOGE-USD",
+    "Cardano":           "ADA-USD",
+    "Avalanche":         "AVAX-USD",
+    "Tron":              "TRX-USD",
+    "Chainlink":         "LINK-USD",
+    "Sui":               "SUI-USD",
+    "Shiba Inu":         "SHIB-USD",
+    "Stellar":           "XLM-USD",
+    "Hedera":            "HBAR-USD",
+    "Polkadot":          "DOT-USD",
+    "Litecoin":          "LTC-USD",
+    "Bitcoin Cash":      "BCH-USD",
+    "Uniswap":           "UNI-USD",
+    "Near Protocol":     "NEAR-USD",
+    "Pepe":              "PEPE-USD",
+    "Aptos":             "APT-USD",
+    "Internet Computer": "ICP-USD",
+    "Monero":            "XMR-USD",
+    "Ethereum Classic":  "ETC-USD",
+    "Polygon":           "POL-USD",
+    "Aave":              "AAVE-USD",
+    "Arbitrum":          "ARB-USD",
+    "Optimism":          "OP-USD",
+    "Filecoin":          "FIL-USD",
+    "VeChain":           "VET-USD",
 }
 
 
@@ -76,8 +98,8 @@ def main():
             print(f"    ERROR {name}: {e}")
         time.sleep(0.4)
 
-    if len(assets) < 6:
-        print(f"  Only {len(assets)} assets fetched (expected 8) — skipping save to preserve existing data.")
+    if len(assets) < 20:
+        print(f"  Only {len(assets)} assets fetched (expected 30) — skipping save to preserve existing data.")
         return
 
     save("data/crypto-history.json", {
