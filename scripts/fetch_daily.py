@@ -50,6 +50,12 @@ SYMBOLS = {
     "Optimism":          "OP-USD",
     "Filecoin":          "FIL-USD",
     "VeChain":           "VET-USD",
+    "Tether":            "USDT-USD",
+    "USDC":              "USDC-USD",
+    "Hyperliquid":       "HYPE-USD",
+    "USDS":              "USDS-USD",
+    "LEO Token":         "LEO-USD",
+    "Zcash":             "ZEC-USD",
 }
 
 
@@ -98,7 +104,7 @@ def main():
             print(f"    ERROR {name}: {e}")
         time.sleep(0.4)
 
-    if len(assets) < 20:
+    if len(assets) < 28:
         print(f"  Only {len(assets)} assets fetched (expected 30) — skipping save to preserve existing data.")
         return
 

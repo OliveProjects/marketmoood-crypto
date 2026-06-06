@@ -54,6 +54,12 @@ SYMBOLS = {
     "Optimism":          "OP-USD",
     "Filecoin":          "FIL-USD",
     "VeChain":           "VET-USD",
+    "Tether":            "USDT-USD",
+    "USDC":              "USDC-USD",
+    "Hyperliquid":       "HYPE-USD",
+    "USDS":              "USDS-USD",
+    "LEO Token":         "LEO-USD",
+    "Zcash":             "ZEC-USD",
 }
 
 
