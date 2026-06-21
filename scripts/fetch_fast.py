@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """
 Runs every 5 minutes.
-Fetches crypto intraday (5m/2d → trimmed to last 24h) and weekly (60m/5d).
+Fetches crypto intraday (5m/2d → trimmed to last 24h) and weekly (60m/7 calendar days).
 Uses 5-minute candles instead of 60-minute — eliminates the 60-min staleness lag.
 Fetches 2 days so the cutoff_ms filter produces a true rolling 24h window, not a
 calendar-day window (crypto trades 24/7, so "1d" would start at UTC midnight).
+Weekly uses period1/period2 timestamps instead of range="5d" — Yahoo Finance's 5d range
+returns only ~5 calendar days, leaving weekends missing for 24/7 assets like crypto.
 """
 
 import json
@@ -71,11 +73,15 @@ def save(path: str, data: object):
     print(f"  Saved {path} ({size_kb} KB)")
 
 
-def fetch_yahoo_chart(symbol: str, interval: str, range_: str) -> list | None:
+def fetch_yahoo_chart(symbol: str, interval: str, range_: str | None = None, *, period1: int | None = None) -> list | None:
     try:
+        if period1 is not None:
+            params = {"interval": interval, "period1": period1, "period2": int(time.time())}
+        else:
+            params = {"interval": interval, "range": range_}
         r = requests.get(
             f"{YAHOO_BASE}{symbol}",
-            params={"interval": interval, "range": range_},
+            params=params,
             headers=HEADERS,
             timeout=15,
         )
@@ -89,7 +95,7 @@ def fetch_yahoo_chart(symbol: str, interval: str, range_: str) -> list | None:
             if c is not None
         ]
     except Exception as e:
-        print(f"    ERROR {symbol} {interval}/{range_}: {e}")
+        print(f"    ERROR {symbol} {interval}: {e}")
         return None
 
 
@@ -107,7 +113,7 @@ def main():
         pts_i = fetch_yahoo_chart(symbol, "5m", "2d")
         if pts_i:
             intraday[name] = [p for p in pts_i if p["x"] >= cutoff_ms]
-        pts_w = fetch_yahoo_chart(symbol, "60m", "5d")
+        pts_w = fetch_yahoo_chart(symbol, "60m", period1=int(time.time()) - 7 * 86_400)
         if pts_w:
             weekly[name] = pts_w
         time.sleep(0.3)
