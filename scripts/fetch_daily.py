@@ -18,6 +18,7 @@ HEADERS = {
     )
 }
 YAHOO_BASE = "https://query1.finance.yahoo.com/v8/finance/chart/"
+DAY_SECONDS = 86_400
 
 SYMBOLS = {
     "Bitcoin":           "BTC-USD",
@@ -68,6 +69,30 @@ def save(path: str, data: object):
     print(f"  Saved {path} ({size_kb} KB)")
 
 
+def with_yesterdays_close(history: list, symbol: str) -> list:
+    """Sets yesterday's bar from Yahoo's previous close.
+
+    This job really runs a few hours after midnight UTC, when Yahoo's daily bars don't
+    have the finished day yet. The app compares today with the last bar before today, so
+    every coin showed a two-day move as today's. The previous close is also the exact
+    value for coins worth under a cent, where Yahoo rounds the bars themselves.
+    """
+    r = requests.get(
+        f"{YAHOO_BASE}{symbol}",
+        params={"interval": "1d", "range": "1d"},
+        headers=HEADERS, timeout=20,
+    )
+    r.raise_for_status()
+    previous_close = r.json()["chart"]["result"][0]["meta"].get("chartPreviousClose")
+    if not previous_close:
+        return history
+    today = int(time.time()) // DAY_SECONDS * DAY_SECONDS * 1000
+    yesterday = today - DAY_SECONDS * 1000
+    earlier = [p for p in history if p["x"] < yesterday]
+    later = [p for p in history if p["x"] >= today]
+    return earlier + [{"x": yesterday, "y": round(float(previous_close), 10)}] + later
+
+
 def main():
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     print(f"=== fetch_daily.py (crypto)  {ts} ===")
@@ -92,6 +117,7 @@ def main():
             ]
             if len(history) < 2:
                 continue
+            history = with_yesterdays_close(history, symbol)
             meta = result.get("meta", {})
             price = meta.get("regularMarketPrice") or history[-1]["y"]
             prev = history[-2]["y"]
